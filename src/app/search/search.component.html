@@ -1,17 +1,113 @@
 <div class="wrapper" *ngIf="dataSource">
-    <h1>Movies</h1>
-    <button mat-raised-button color="primary" [routerLink]="['/']">
+    <div class="header-container">
+        <h1>Movies</h1>
+        <button mat-raised-button color="primary" [routerLink]="['/']">
             <i class="fa-solid fa-house"></i> Back to Home
         </button>
+    </div>
 
-        <mat-form-field appearance="outline" class="filter-field">
-        <mat-label>Search movies</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Matrix" #input>
+    <!-- Quick Search -->
+    <mat-form-field appearance="outline" class="filter-field">
+        <mat-label>Quick Search</mat-label>
+        <input matInput (keyup)="applyQuickFilter($event)" placeholder="Search by title, director, etc." #input>
         <mat-icon matSuffix>search</mat-icon>
-        
     </mat-form-field>
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
+    <!-- Advanced Filters -->
+    <mat-expansion-panel>
+        <mat-expansion-panel-header>
+            <mat-panel-title>Advanced Search Options</mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="advanced-filters">
+            <div class="filter-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Title</mat-label>
+                    <input matInput [(ngModel)]="titleFilter" placeholder="Filter by title">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Description</mat-label>
+                    <input matInput [(ngModel)]="descriptionFilter" placeholder="Filter by description">
+                </mat-form-field>
+
+<mat-form-field appearance="outline">
+  <mat-label>Genre</mat-label>
+  <mat-select [(ngModel)]="genreFilter" name="genre" multiple>
+    <mat-option *ngFor="let genre of genreList" [value]="genre">
+      {{genre}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+            </div>
+
+            <div class="filter-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Director</mat-label>
+                    <input matInput [(ngModel)]="directorFilter" placeholder="Filter by director">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Actor</mat-label>
+                    <input matInput [(ngModel)]="actorFilter" placeholder="Filter by actor">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Min Duration (minutes)</mat-label>
+                    <input matInput [(ngModel)]="minDurationFilter" type="number" placeholder="Minimum duration">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Max Duration (minutes)</mat-label>
+                    <input matInput [(ngModel)]="maxDurationFilter" type="number" placeholder="Maximum duration">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Release Date</mat-label>
+                    <input matInput [matDatepicker]="releasePicker" [(ngModel)]="releaseDateFilter">
+                    <mat-datepicker-toggle matIconSuffix [for]="releasePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #releasePicker></mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Screening Date</mat-label>
+                    <input matInput [matDatepicker]="screeningPicker" [(ngModel)]="screeningDateFilter">
+                    <mat-datepicker-toggle matIconSuffix [for]="screeningPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #screeningPicker></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="filter-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Min Price ($)</mat-label>
+                    <input matInput [(ngModel)]="minPriceFilter" type="number" placeholder="Minimum price">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Max Price ($)</mat-label>
+                    <input matInput [(ngModel)]="maxPriceFilter" type="number" placeholder="Maximum price">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Min Rating (0-10)</mat-label>
+                    <input matInput [(ngModel)]="minRatingFilter" type="number" min="0" max="10" placeholder="Minimum rating">
+                </mat-form-field>
+            </div>
+
+            <div class="filter-actions">
+                <button mat-raised-button color="primary" (click)="applyDetailedFilters()">Apply Filters</button>
+                <button mat-raised-button color="warn" (click)="resetFilters()">Reset Filters</button>
+            </div>
+        </div>
+    </mat-expansion-panel>
+
+    <!-- Movie Table -->
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <!-- Existing table content -->
         <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef class="hide-780">
                 <i class="fa-solid fa-hashtag"></i> ID
@@ -33,21 +129,21 @@
             <td mat-cell *matCellDef="let element"> {{element.director}} </td>
         </ng-container>
 
-    <ng-container matColumnDef="releaseDate">
-        <th mat-header-cell *matHeaderCellDef class="hide-600">
-            <i class="fa-solid fa-calendar"></i> Release Date
-        </th>
-        <td mat-cell *matCellDef="let element" class="hide-600">
-            {{element.releaseDate | date: 'dd/MM/yyyy'}}
-        </td>
-    </ng-container>
+        <ng-container matColumnDef="releaseDate">
+            <th mat-header-cell *matHeaderCellDef class="hide-600">
+                <i class="fa-solid fa-calendar"></i> Release Date
+            </th>
+            <td mat-cell *matCellDef="let element" class="hide-600">
+                {{element.releaseDate | date: 'dd/MM/yyyy'}}
+            </td>
+        </ng-container>
 
         <ng-container matColumnDef="genre">
             <th mat-header-cell *matHeaderCellDef class="hide-600">
                 <i class="fa-solid fa-tags"></i> Genre
             </th>
             <td mat-cell *matCellDef="let element" class="hide-600">
-                {{element.genre}}
+                {{element.genre.join(', ')}}
             </td>
         </ng-container>
 

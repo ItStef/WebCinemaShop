@@ -1,0 +1,48 @@
+.auth-card {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.name-row, .password-row {
+  display: flex;
+  gap: 16px;
+}
+
+.half-width {
+  flex: 1;
+  margin-bottom: 16px;
+}
+
+mat-card-header {
+  margin-bottom: 20px;
+}
+
+mat-card-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+mat-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 16px 16px;
+}
+
+button, a {
+  width: 100%;
+}
+
+@media (max-width: 600px) {
+  .name-row, .password-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

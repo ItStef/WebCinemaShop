@@ -12,15 +12,52 @@
       <p><strong>Price:</strong> ${{movie.price}}</p>
       <p><strong>Duration:</strong> {{movie.duration}} minutes</p>
       <p><strong>Cast:</strong> {{movie.cast.join(', ')}}</p>
-      <p *ngIf="movie.averageRating"><strong>Average Rating:</strong> {{movie.averageRating | number:'1.1-1'}} / 10</p>
-      <p *ngIf="movie.reviews && movie.reviews.length > 0"><strong>Reviews:</strong></p>
-      <ul *ngIf="movie.reviews && movie.reviews.length > 0">
-        <li *ngFor="let review of movie.reviews">
-          <strong>{{review.userName}}:</strong> {{review.comment}} (Rating: {{review.rating}}/10 - {{review.createdAt | date:'short'}})
-        </li>
-      </ul>
-    </mat-card-content>
+<p *ngIf="movie.averageRating"><strong>Average Rating:</strong> {{movie.averageRating | number:'1.1-1'}} / 10</p>
 
+<!-- If displaying reviews -->
+<ul *ngIf="movie.reviews && movie.reviews.length > 0">
+  <li *ngFor="let review of movie.reviews">
+    <strong>{{review.userName}}:</strong> {{review.comment}} 
+    (Rating: {{review.rating}}/10 - {{review.createdAt | date:'short'}})
+  </li>
+</ul>
+            <!-- Screenings and Reservation Section -->
+      <div class="reservation-section" *ngIf="movie.screenings && movie.screenings.length > 0">
+        <h3>Available Screenings</h3>
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Select Screening</mat-label>
+          <mat-select [(ngModel)]="selectedScreening">
+            <mat-option *ngFor="let screening of movie.screenings" [value]="screening">
+              {{screening.date | date:'mediumDate'}} at {{screening.time}} - Hall {{screening.hall}} 
+              (${{screening.price}})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        
+        <div class="quantity-selector" *ngIf="selectedScreening">
+          <span>Quantity:</span>
+          <button mat-icon-button (click)="decreaseQuantity()">
+            <mat-icon>remove</mat-icon>
+          </button>
+          <span class="quantity-value">{{quantity}}</span>
+          <button mat-icon-button (click)="increaseQuantity()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        
+        <div class="price-calculation" *ngIf="selectedScreening">
+          <p>Price per ticket: ${{selectedScreening.price}}</p>
+          <p class="total-price">Total: ${{(selectedScreening.price * quantity).toFixed(2)}}</p>
+        </div>
+        
+        <button mat-raised-button color="primary" 
+                [disabled]="!selectedScreening" 
+                (click)="addToCart()">
+          <mat-icon>add_shopping_cart</mat-icon> Add to Cart
+        </button>
+      </div>
+    </mat-card-content>
     <mat-card-actions>
       <button mat-raised-button color="primary" (click)="goBackToSearch()">Back to Search</button>
     </mat-card-actions>

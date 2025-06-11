@@ -1,0 +1,151 @@
+<div class="container">
+  <h1>My Cart</h1>
+
+  <!-- Empty cart message -->
+  <div *ngIf="!cartItems.length" class="empty-cart">
+    <mat-card>
+      <mat-card-content>
+        <div class="empty-message">
+          <mat-icon>shopping_cart</mat-icon>
+          <h2>Your cart is empty</h2>
+          <p>You haven't added any screenings to your cart yet.</p>
+          <button mat-raised-button color="primary" routerLink="/search">Browse Movies</button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Cart with items -->
+  <div *ngIf="cartItems.length" class="cart-content">
+    <table mat-table [dataSource]="cartItems" class="cart-table">
+      <!-- Movie Column -->
+      <ng-container matColumnDef="movie">
+        <th mat-header-cell *matHeaderCellDef>Movie</th>
+        <td mat-cell *matCellDef="let item">
+          <div class="movie-info">
+            <span class="movie-title">{{item.movie.title}}</span>
+            <span class="movie-details">{{item.movie.director}} | {{item.movie.duration}} min</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Screening Column -->
+      <ng-container matColumnDef="screening">
+        <th mat-header-cell *matHeaderCellDef>Screening</th>
+        <td mat-cell *matCellDef="let item">
+          <div class="screening-info">
+            <div>{{formatDate(item.screening.date)}}</div>
+            <div>{{item.screening.time}}</div>
+            <div>Hall: {{item.screening.hall || 'N/A'}}</div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Price Column -->
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef>Price</th>
+        <td mat-cell *matCellDef="let item">${{item.screening.price}}</td>
+      </ng-container>
+
+      <!-- Quantity Column -->
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef>Quantity</th>
+        <td mat-cell *matCellDef="let item">
+          <div class="quantity-controls" *ngIf="item.status === 'reserved'">
+            <button mat-icon-button (click)="updateQuantity(item, -1)">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span>{{item.quantity}}</span>
+            <button mat-icon-button (click)="updateQuantity(item, 1)">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+          <span *ngIf="item.status !== 'reserved'">{{item.quantity}}</span>
+        </td>
+      </ng-container>
+
+      <!-- Total Column -->
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let item">${{item.total.toFixed(2)}}</td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let item">
+          <div class="status-container">
+            <div class="status-chip" [class]="item.status">
+              {{item.status}}
+            </div>
+            
+            <!-- Rating for watched movies -->
+            <div *ngIf="item.status === 'watched'" class="rating">
+              <mat-form-field appearance="outline">
+                <mat-label>Rate (1-10)</mat-label>
+                <mat-select [value]="item.rating || null" (selectionChange)="rateMovie(item, $event.value)">
+                  <mat-option *ngFor="let num of [1,2,3,4,5,6,7,8,9,10]" [value]="num">
+                    {{num}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let item">
+          <div class="action-buttons">
+            <!-- Actions for reserved items -->
+            <ng-container *ngIf="item.status === 'reserved'">
+              <button mat-icon-button color="primary" matTooltip="Mark as Watched" 
+                      (click)="updateStatus(item, 'watched')">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" matTooltip="Cancel Reservation" 
+                      (click)="updateStatus(item, 'canceled')">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </ng-container>
+            
+            <!-- Remove button for all items -->
+            <button mat-icon-button color="warn" matTooltip="Remove from Cart" 
+                    (click)="removeFromCart(item.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <!-- Cart Summary -->
+    <mat-card class="cart-summary">
+      <mat-card-content>
+        <div class="summary-content">
+          <div class="summary-row">
+            <span>Total</span>
+            <span class="price">${{totalPrice.toFixed(2)}}</span>
+          </div>
+          
+          <mat-divider></mat-divider>
+          
+          <div class="checkout-actions">
+            <button mat-raised-button color="primary" (click)="checkout()"
+                    [disabled]="!hasReservedItems()">
+              <mat-icon>payment</mat-icon> Checkout
+            </button>
+            <button mat-button routerLink="/search">
+              <mat-icon>arrow_back</mat-icon> Continue Shopping
+            </button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

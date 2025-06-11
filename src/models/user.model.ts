@@ -8,4 +8,16 @@ export interface UserModel {
   phone: string;
   address: string;
   favoriteGenres: string[];
+  cart?: CartItemModel[];
+}
+
+export interface CartItemModel {
+  id: string;
+  movieId: string;
+  screeningId: string;
+  quantity: number;
+  status: 'reserved' | 'watched' | 'canceled';
+  rating: number | null;
+  review?: string;
+  dateAdded: string; // ISO date string
 }

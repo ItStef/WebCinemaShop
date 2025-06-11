@@ -1,0 +1,68 @@
+<mat-card class="auth-card">
+    <mat-card-header>
+        <h1>Create an Account</h1>
+    </mat-card-header>
+    <mat-card-content>
+        <mat-form-field class="full-width">
+            <mat-label>Username</mat-label>
+            <input type="text" matInput placeholder="Choose a username" [(ngModel)]="user.username" name="username" required>
+        </mat-form-field>
+
+        <div class="name-row">
+            <mat-form-field class="half-width">
+                <mat-label>First Name</mat-label>
+                <input type="text" matInput placeholder="Your first name" [(ngModel)]="user.firstName" name="firstName">
+            </mat-form-field>
+
+            <mat-form-field class="half-width">
+                <mat-label>Last Name</mat-label>
+                <input type="text" matInput placeholder="Your last name" [(ngModel)]="user.lastName" name="lastName">
+            </mat-form-field>
+        </div>
+
+        <mat-form-field class="full-width">
+            <mat-label>Email</mat-label>
+            <input type="email" matInput placeholder="Your email address" [(ngModel)]="user.email" name="email" required>
+        </mat-form-field>
+
+        <div class="password-row">
+            <mat-form-field class="half-width">
+                <mat-label>Password</mat-label>
+                <input type="password" matInput placeholder="Create a password" [(ngModel)]="user.password" name="password" required>
+            </mat-form-field>
+
+            <mat-form-field class="half-width">
+                <mat-label>Confirm Password</mat-label>
+                <input type="password" matInput placeholder="Confirm your password" [(ngModel)]="confirmPassword" name="confirmPassword" required>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field class="full-width">
+            <mat-label>Phone</mat-label>
+            <input type="tel" matInput placeholder="Your phone number" [(ngModel)]="user.phone" name="phone">
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+            <mat-label>Address</mat-label>
+            <input type="text" matInput placeholder="Your address" [(ngModel)]="user.address" name="address">
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+            <mat-label>Favorite Movie Genres</mat-label>
+            <mat-select [(ngModel)]="user.favoriteGenres" name="favoriteGenres" multiple>
+                <mat-option *ngFor="let genre of genreList" [value]="genre">
+                    {{genre}}
+                </mat-option>
+            </mat-select>
+            <mat-hint>Select one or more genres</mat-hint>
+        </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions>
+        <button type="button" mat-raised-button color="primary" (click)="doSignup()">
+            <i class="fa-solid fa-user-plus"></i> Create Account
+        </button>
+        <a mat-button routerLink="/login">
+            <i class="fa-solid fa-sign-in-alt"></i> I already have an account
+        </a>
+    </mat-card-actions>
+</mat-card>

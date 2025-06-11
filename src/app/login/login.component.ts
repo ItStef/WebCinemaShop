@@ -16,26 +16,25 @@ import { UserService } from '../../services/user.service';
 export class LoginComponent {
 
 
-  public email: string = ''
+  public username: string = ''
   public password: string = ''
 
   constructor(private router: Router) {
     if (UserService.getActiveUser()) {
-      router.navigate(['/user'])
+      router.navigate(['/'])
       return
     }
   }
 
   public doLogin() {
-    if (UserService.login(this.email, this.password)) {
-      this.router.navigate(['/user'])
+    if (this.username == '' || this.password == '') {
+      alert('Username and password are required')
       return
     }
-    if (this.email == '' || this.password == '') {
-      alert('Email and password are required')
+    if (UserService.login(this.username, this.password)) {
+      this.router.navigate(['/'])
       return
     }
-    alert('Invalid email or password')
   }
 
 

@@ -1,7 +1,19 @@
 import { MovieModel } from "../models/movie.model"; 
 import { ScreeningModel } from "../models/movie.model";
+import { UserService } from "./user.service";
+import { ReviewModel } from "../models/review.model";
 
 export class MovieService { 
+    private static readonly genres: string[] = [
+        'Action', 'Adventure', 'Animation', 'Comedy', 'Crime', 
+        'Documentary', 'Drama', 'Family', 'Fantasy', 'Horror',
+        'Musical', 'Mystery', 'Romance', 'Science Fiction', 
+        'Thriller', 'War', 'Western'
+    ];
+
+    static getGenres(): string[] {
+        return [...this.genres]; 
+    }
 
     static getMovies(): MovieModel[] {
         const movies = [
@@ -324,6 +336,7 @@ export class MovieService {
                 averageRating: this.calculateAverageRating(movie.reviews)
             };
         });
+        
 
     }
 
@@ -331,13 +344,114 @@ export class MovieService {
         return this.getMovies().find(movie => movie.id === id) || null;
     }
 
-        static calculateAverageRating(reviews: any[]): number {
-        if (!reviews || reviews.length === 0) {
-            return 0; // No reviews, return 0 rating
-        }
-        
-        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-        return (totalRating / reviews.length);
+// Update your existing method to handle 1-10 scale
+static calculateAverageRating(reviews: any[]): number {
+  if (!reviews || reviews.length === 0) {
+    return 0;
+  }
+  
+  const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+  return (totalRating / reviews.length);
+}
+
+
+
+
+// Add this method to MovieService
+static addReview(movieId: string, review: ReviewModel): boolean {
+  try {
+    const movies = this.getMovies();
+    const movie = movies.find(m => m.id === movieId);
+    
+    if (!movie) return false;
+    
+    // Initialize reviews array if it doesn't exist
+    if (!movie.reviews) {
+      movie.reviews = [];
     }
+    
+    // Check if user already reviewed this movie
+    const existingReviewIndex = movie.reviews.findIndex(r => r.userId === review.userId);
+    
+    if (existingReviewIndex >= 0) {
+      // Update existing review
+      movie.reviews[existingReviewIndex] = review;
+    } else {
+      // Add new review
+      movie.reviews.push(review);
+    }
+    
+    // Recalculate average rating
+    movie.averageRating = this.calculateAverageRating(movie.reviews);
+    
+    // Save updated movies
+    localStorage.setItem('movies', JSON.stringify(movies));
+    return true;
+  } catch (error) {
+    console.error('Error adding review:', error);
+    return false;
+  }
+}
+
+static updateMovieRating(movieId: string, newRating: number): boolean {
+  try {
+    const movies = this.getMovies();
+    const movie = movies.find(m => m.id === movieId);
+    
+    if (!movie) return false;
+    
+    // Get active user
+    const user = UserService.getActiveUser();
+    if (!user) return false;
+    
+    // Initialize reviews array if it doesn't exist
+    if (!movie.reviews) {
+      movie.reviews = [];
+    }
+    
+    // Check if user already has a review
+    const existingReviewIndex = movie.reviews.findIndex(r => r.userId === user.id);
+    
+    if (existingReviewIndex >= 0) {
+      // Update existing review's rating
+      movie.reviews[existingReviewIndex].rating = newRating;
+    } else {
+      // Add a new simple review with just the rating
+            const newReview: ReviewModel = {
+            id: Math.random().toString(36).substr(2, 9), // Generate a unique ID
+            userId: user.id || '',
+            movieId: movieId, // Add the movieId from the parameter
+            userName: user.username,
+            rating: newRating,
+            comment: '',
+            createdAt: new Date()
+            };
+      
+      // Add missing properties that may be expected based on your sample data
+      if ('id' in movie.reviews[0] || movie.reviews.length === 0) {
+        // Add an id if other reviews have it
+        (newReview as any).id = Math.random().toString(36).substr(2, 9);
+      }
+      
+      if ('movieId' in movie.reviews[0] || movie.reviews.length === 0) {
+        // Add movieId if other reviews have it
+        (newReview as any).movieId = movieId;
+      }
+      
+      movie.reviews.push(newReview);
+    }
+    
+    // Recalculate average rating
+    movie.averageRating = this.calculateAverageRating(movie.reviews);
+    
+    // Save updated movies
+    localStorage.setItem('movies', JSON.stringify(movies));
+    return true;
+  } catch (error) {
+    console.error('Error updating movie rating:', error);
+    return false;
+  }
+}
+
 
 }

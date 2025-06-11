@@ -11,7 +11,7 @@ export interface MovieModel {
   releaseDate: Date;
   screenings: ScreeningModel[];
   price: number;
-  averageRating?: number;
+  averageRating: number;
   reviews?: ReviewModel[];
 }
 

@@ -1,6 +1,74 @@
-<p>home works!</p>
-
-<!-- make button that redirects to logincomponent html page for login  -->
-<button routerLink="/login">Login</button>
-
-<button routerLink="/search">Search</button>
+<div class="home-container">
+  <div class="welcome-section">
+    <!-- Logged in state -->
+    <div *ngIf="isLoggedIn" class="welcome-message">
+      <h1>Welcome to WebCinemaShop!</h1>
+      <p>Discover the latest movies, book tickets, and more.</p>
+      
+      <!-- User profile box -->
+      <div class="user-profile-container">
+        <div class="user-profile-box" [matMenuTriggerFor]="userMenu">
+          <div class="avatar">{{ getUserInitials() }}</div>
+          <div class="user-info">
+            <span class="username">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+            <span class="hover-hint">Click for options</span>
+          </div>
+        </div>
+        
+        <!-- User menu (appears on click) -->
+        <mat-menu #userMenu="matMenu">
+          <button mat-menu-item routerLink="/user">
+            <mat-icon>person</mat-icon>
+            <span>My Profile</span>
+          </button>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+      </div>
+      
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" routerLink="/search">
+          <mat-icon>search</mat-icon>
+          Browse Movies
+        </button>
+      </div>
+    </div>
+    
+    <!-- Not logged in state -->
+    <div *ngIf="!isLoggedIn" class="welcome-message">
+      <h1>Welcome to WebCinemaShop!</h1>
+      <p>Please log in to browse movies and book tickets.</p>
+      
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" routerLink="/login">
+          <mat-icon>login</mat-icon>
+          Login
+        </button>
+        <button mat-stroked-button routerLink="/signup">
+          <mat-icon>person_add</mat-icon>
+          Create Account
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Featured content section -->
+  <div class="featured-section">
+    <h2>Featured Movies</h2>
+    <div class="featured-movies">
+      <!-- This would be populated with your featured movies -->
+      <div class="movie-card">
+        <img src="assets/movie-placeholder.jpg" alt="Movie poster">
+        <h3>Inception</h3>
+        <p>A thief who steals corporate secrets through the use of dream-sharing technology.</p>
+      </div>
+      <div class="movie-card">
+        <img src="assets/movie-placeholder.jpg" alt="Movie poster">
+        <h3>The Dark Knight</h3>
+        <p>When the menace known as the Joker wreaks havoc on Gotham City.</p>
+      </div>
+    </div>
+  </div>
+</div>

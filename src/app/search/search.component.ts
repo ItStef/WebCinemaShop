@@ -7,28 +7,158 @@ import { MovieModel } from '../../models/movie.model';
 import { MovieService } from '../../services/movie.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-movie',
-  imports: [MatTableModule, MatButtonModule, CommonModule, RouterLink, MatFormFieldModule, MatInputModule, FormsModule],
+  standalone: true,
+  imports: [
+    MatTableModule, MatButtonModule, CommonModule, RouterLink, MatFormFieldModule, MatInputModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatIconModule, MatExpansionModule, FormsModule, ReactiveFormsModule],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
 export class SearchComponent {
   displayedColumns: string[] = ['id', 'title', 'director', 'releaseDate', 'genre', 'actions'];
-  dataSource: MovieModel[] = MovieService.getMovies();
+  allMovies: MovieModel[] = MovieService.getMovies();
+  dataSource: MovieModel[] = this.allMovies;
+  
+  // Filter properties
+  titleFilter: string = '';
+  descriptionFilter: string = '';
+  genreFilter: string[] = [];
+  directorFilter: string = '';
+  actorFilter: string = '';
+  minDurationFilter: number | null = null;
+  maxDurationFilter: number | null = null;
+  releaseDateFilter: Date | null = null;
+  screeningDateFilter: Date | null = null;
+  minPriceFilter: number | null = null;
+  maxPriceFilter: number | null = null;
+  minRatingFilter: number | null = null;
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource = this.dataSource.filter(movie =>
+  genreList: string[] = MovieService.getGenres();
+  
+  applyQuickFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
+    if (!filterValue) {
+      this.dataSource = this.allMovies;
+      return;
+    }
+    
+    this.dataSource = this.allMovies.filter(movie =>
       movie.title.toLowerCase().includes(filterValue) ||
       movie.director.toLowerCase().includes(filterValue) ||
-      movie.genre.includes(filterValue) ||
+      movie.genre.some(g => g.toLowerCase().includes(filterValue)) ||
       movie.releaseDate.toString().toLowerCase().includes(filterValue)
     );
-    if(!filterValue){
-      this.dataSource = MovieService.getMovies();
+  }
+
+
+  applyDetailedFilters() {
+    let filteredMovies = this.allMovies;
+    
+
+    if (this.titleFilter) {
+      filteredMovies = filteredMovies.filter(movie => 
+        movie.title.toLowerCase().includes(this.titleFilter.toLowerCase()));
     }
+    
+
+    if (this.descriptionFilter) {
+      filteredMovies = filteredMovies.filter(movie => 
+        movie.description.toLowerCase().includes(this.descriptionFilter.toLowerCase()));
+    }
+
+    if (this.genreFilter && this.genreFilter.length > 0) {
+      filteredMovies = filteredMovies.filter(movie => 
+        // Check if ALL of the selected genres match any of the movie's genres
+        this.genreFilter.every(selectedGenre => 
+          movie.genre.some(movieGenre => 
+            movieGenre.toLowerCase() === selectedGenre.toLowerCase()
+          )
+        )
+      );
+    }
+        
+
+    if (this.directorFilter) {
+      filteredMovies = filteredMovies.filter(movie => 
+        movie.director.toLowerCase().includes(this.directorFilter.toLowerCase()));
+    }
+    
+
+    if (this.actorFilter) {
+      filteredMovies = filteredMovies.filter(movie => 
+        movie.cast.some(actor => actor.toLowerCase().includes(this.actorFilter.toLowerCase())));
+    }
+    
+
+    if (this.minDurationFilter !== null) {
+      filteredMovies = filteredMovies.filter(movie => movie.duration >= this.minDurationFilter!);
+    }
+    if (this.maxDurationFilter !== null) {
+      filteredMovies = filteredMovies.filter(movie => movie.duration <= this.maxDurationFilter!);
+    }
+    
+    if (this.releaseDateFilter) {
+      const filterDate = new Date(this.releaseDateFilter);
+      filteredMovies = filteredMovies.filter(movie => {
+        const releaseDate = new Date(movie.releaseDate);
+        return releaseDate.getFullYear() === filterDate.getFullYear() && 
+               releaseDate.getMonth() === filterDate.getMonth() && 
+               releaseDate.getDate() === filterDate.getDate();
+      });
+    }
+    
+
+    if (this.screeningDateFilter) {
+      const filterDate = new Date(this.screeningDateFilter);
+      filteredMovies = filteredMovies.filter(movie => 
+        movie.screenings.some(screening => {
+          const screeningDate = new Date(screening.date);
+          return screeningDate.getFullYear() === filterDate.getFullYear() && 
+                 screeningDate.getMonth() === filterDate.getMonth() && 
+                 screeningDate.getDate() === filterDate.getDate();
+        })
+      );
+    }
+
+    
+    if (this.minPriceFilter !== null) {
+      filteredMovies = filteredMovies.filter(movie => movie.price >= this.minPriceFilter!);
+    }
+    if (this.maxPriceFilter !== null) {
+      filteredMovies = filteredMovies.filter(movie => movie.price <= this.maxPriceFilter!);
+    }
+  
+
+    if (this.minRatingFilter !== null) {
+      filteredMovies = filteredMovies.filter(movie => 
+        movie.averageRating >= this.minRatingFilter!);
+    }
+    
+    this.dataSource = filteredMovies;
+  }
+ 
+
+  resetFilters() {
+    this.titleFilter = '';
+    this.descriptionFilter = '';
+    this.genreFilter = [];
+    this.directorFilter = '';
+    this.actorFilter = '';
+    this.minDurationFilter = null;
+    this.maxDurationFilter = null;
+    this.releaseDateFilter = null;
+    this.screeningDateFilter = null;
+    this.minPriceFilter = null;
+    this.maxPriceFilter = null;
+    this.minRatingFilter = null;
+    this.dataSource = this.allMovies;
   }
 }

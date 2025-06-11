@@ -1,0 +1,23 @@
+.movie-details-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.movie-card {
+  max-width: 600px;
+  width: 100%;
+}
+
+mat-card-content {
+  margin-top: 16px;
+}
+
+.error-message {
+  text-align: center;
+  padding: 20px;
+}
+
+button {
+  margin: 8px;
+}

@@ -18,6 +18,5 @@ export interface CartItemModel {
   quantity: number;
   status: 'reserved' | 'watched' | 'canceled';
   rating: number | null;
-  review?: string;
   dateAdded: string; // ISO date string
 }

@@ -1,10 +1,26 @@
 <div class="wrapper" *ngIf="dataSource">
-    <div class="header-container">
-        <h1>Movies</h1>
-        <button mat-raised-button color="primary" [routerLink]="['/']">
-            <i class="fa-solid fa-house"></i> Back to Home
-        </button>
+  <!-- User Profile Box - Move it here -->
+  <div class="user-profile-container">
+    <div class="user-profile-box" [matMenuTriggerFor]="userMenu">
+      <div class="avatar">{{ getUserInitials() }}</div>
+      <div class="user-info">
+        <span class="username">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+        <span class="hover-hint">Click for options</span>
+      </div>
     </div>
+    
+    <!-- User menu (appears on click) -->
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item routerLink="/cart">
+        <mat-icon>shopping_cart</mat-icon>
+        <span>My Cart</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </div>
 
     <!-- Quick Search -->
     <mat-form-field appearance="outline" class="filter-field">

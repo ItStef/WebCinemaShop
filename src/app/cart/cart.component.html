@@ -1,5 +1,26 @@
 <div class="container">
   <h1>My Cart</h1>
+  <div class="user-profile-container">
+  <div class="user-profile-box" [matMenuTriggerFor]="userMenu">
+    <div class="avatar">{{ getUserInitials() }}</div>
+    <div class="user-info">
+      <span class="username">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+      <span class="hover-hint">Click for options</span>
+    </div>
+  </div>
+  
+  <!-- User menu (appears on click) -->
+  <mat-menu #userMenu="matMenu">
+    <button mat-menu-item routerLink="/cart">
+      <mat-icon>shopping_cart</mat-icon>
+      <span>My Cart</span>
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>Logout</span>
+    </button>
+  </mat-menu>
+</div>
 
   <!-- Empty cart message -->
   <div *ngIf="!cartItems.length" class="empty-cart">
@@ -83,12 +104,17 @@
             <div *ngIf="item.status === 'watched'" class="rating">
               <mat-form-field appearance="outline">
                 <mat-label>Rate (1-10)</mat-label>
-                <mat-select [value]="item.rating || null" (selectionChange)="rateMovie(item, $event.value)">
+                <mat-select [(ngModel)]="item.tempRating" [value]="item.rating || null">
                   <mat-option *ngFor="let num of [1,2,3,4,5,6,7,8,9,10]" [value]="num">
                     {{num}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
+              <button mat-raised-button color="primary" 
+                    [disabled]="!item.tempRating"
+                    (click)="submitRatingAndRemove(item, item.tempRating)">
+                Submit Rating
+              </button>
             </div>
           </div>
         </td>

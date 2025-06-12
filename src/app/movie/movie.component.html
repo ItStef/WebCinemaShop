@@ -1,4 +1,27 @@
 <div class="movie-details-container" *ngIf="movie">
+  <!-- Add User Profile Box -->
+  <div class="user-profile-container">
+    <div class="user-profile-box" [matMenuTriggerFor]="userMenu">
+      <div class="avatar">{{ getUserInitials() }}</div>
+      <div class="user-info">
+        <span class="username">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
+        <span class="hover-hint">Click for options</span>
+      </div>
+    </div>
+    
+    <!-- User menu (appears on click) -->
+    <mat-menu #userMenu="matMenu">
+      <button mat-menu-item routerLink="/cart">
+        <mat-icon>shopping_cart</mat-icon>
+        <span>My Cart</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-menu>
+  </div>
+  
   <mat-card class="movie-card">
     <mat-card-header>
       <mat-card-title>{{movie.title}}</mat-card-title>
@@ -12,15 +35,8 @@
       <p><strong>Price:</strong> ${{movie.price}}</p>
       <p><strong>Duration:</strong> {{movie.duration}} minutes</p>
       <p><strong>Cast:</strong> {{movie.cast.join(', ')}}</p>
-<p *ngIf="movie.averageRating"><strong>Average Rating:</strong> {{movie.averageRating | number:'1.1-1'}} / 10</p>
+      <p *ngIf="movie.averageRating"><strong>Average Rating:</strong> {{movie.averageRating | number:'1.1-1'}} / 10</p>
 
-<!-- If displaying reviews -->
-<ul *ngIf="movie.reviews && movie.reviews.length > 0">
-  <li *ngFor="let review of movie.reviews">
-    <strong>{{review.userName}}:</strong> {{review.comment}} 
-    (Rating: {{review.rating}}/10 - {{review.createdAt | date:'short'}})
-  </li>
-</ul>
             <!-- Screenings and Reservation Section -->
       <div class="reservation-section" *ngIf="movie.screenings && movie.screenings.length > 0">
         <h3>Available Screenings</h3>

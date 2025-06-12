@@ -1,14 +1,3 @@
-// import { Component } from '@angular/core';
-
-// @Component({
-//   selector: 'app-home',
-//   imports: [],
-//   templateUrl: './home.component.html',
-//   styleUrl: './home.component.css'
-// })
-// export class HomeComponent {
-
-// }
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
@@ -58,10 +47,8 @@ export class HomeComponent implements OnInit {
     return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
   }
 
-  logout() {
-    localStorage.removeItem('active');
-    this.isLoggedIn = false;
-    this.currentUser = null;
+  logout(): void {
+    UserService.logout();
     this.router.navigate(['/login']);
   }
 }

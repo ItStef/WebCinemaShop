@@ -1,5 +1,3 @@
-import { ReviewModel } from './review.model';
-
 export interface MovieModel {
   id: string;
   title: string;
@@ -11,8 +9,7 @@ export interface MovieModel {
   releaseDate: Date;
   screenings: ScreeningModel[];
   price: number;
-  averageRating: number;
-  reviews?: ReviewModel[];
+  averageRating?: number;
 }
 
 export interface ScreeningModel {

@@ -14,6 +14,10 @@ import { CartService } from '../../services/cart.service';
 import { MatFormField, MatLabel } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { UserService } from '../../services/user.service';
+import { MovieService } from '../../services/movie.service';
+import { Router } from '@angular/router';
+import { MatMenu } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-cart',
@@ -31,7 +35,11 @@ import { UserService } from '../../services/user.service';
     MatTooltipModule,
     RouterLink,
     MatFormField,
-    MatSelectModule
+    MatSelectModule,
+    MatLabel,
+    MatMenu,
+    MatMenuModule
+
   ],
   templateUrl: './cart.component.html',
   styleUrl: './cart.component.css'
@@ -40,13 +48,32 @@ export class CartComponent implements OnInit {
   cartItems: any[] = [];
   totalPrice: number = 0;
   displayedColumns: string[] = ['movie', 'screening', 'price', 'quantity', 'total', 'status', 'actions'];
-  
-  constructor() { }
-  
-  ngOnInit(): void {
+  movieService = MovieService;
+  currentUser: any;
+
+  constructor(private router: Router) {}
+
+
+  ngOnInit() {
     this.loadCartItems();
+    // Initialize current user
+    this.currentUser = UserService.getActiveUser();
   }
-  
+
+  // Add these methods
+  getUserInitials(): string {
+    if (!this.currentUser) return '';
+    
+    const firstName = this.currentUser.firstName || '';
+    const lastName = this.currentUser.lastName || '';
+    
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+  }
+
+  logout(): void {
+    UserService.logout();
+    this.router.navigate(['/login']);
+  }
   loadCartItems(): void {
     this.cartItems = CartService.getCartItems();
     this.totalPrice = CartService.calculateTotal();
@@ -74,19 +101,47 @@ export class CartComponent implements OnInit {
     }
   }
   
-  rateMovie(cartItemId: string, rating: number): boolean {
-    const user = UserService.getActiveUser();
-    if (!user || !user.cart) return false;
-    
-    const item = user.cart.find(item => item.id === cartItemId);
-    if (!item || item.status !== 'watched') return false;
-    
-    item.rating = Math.min(Math.max(1, rating), 10); // Ensure rating is between 1-10
-    
-    // Update user in storage
-    UserService.updateUser(user);
-    return true;
+rateMovie(item: any, rating: number): void {
+  // First, update the user's rating in their cart
+  if (CartService.rateMovie(item.id, rating)) {
+    // Then, update the movie's overall rating
+    const movieId = item.movieId;
+    this.updateMovieRating(movieId);
+    this.loadCartItems();
   }
+}
+
+// Add this new method to calculate and update the movie's rating
+private updateMovieRating(movieId: string): void {
+  const allRatings = this.getAllRatingsForMovie(movieId);
+  
+  if (allRatings.length > 0) {
+    // Calculate average rating
+    const sum = allRatings.reduce((total, rating) => total + rating, 0);
+    const averageRating = sum / allRatings.length;
+    
+    // Update the movie's rating
+    this.movieService.updateMovieRating(movieId, averageRating);
+  }
+}
+
+// Helper method to get all ratings for a specific movie
+private getAllRatingsForMovie(movieId: string): number[] {
+  const allUsers = UserService.getAllUsers();
+  const ratings: number[] = [];
+  
+  allUsers.forEach(user => {
+    if (user.cart) {
+      user.cart.forEach(item => {
+        if (item.movieId === movieId && item.status === 'watched' && item.rating !== null) {
+          ratings.push(item.rating);
+        }
+      });
+    }
+  });
+  
+  return ratings;
+}
     
   removeFromCart(itemId: string): void {
     if (confirm('Are you sure you want to remove this item from your cart?')) {
@@ -123,6 +178,30 @@ export class CartComponent implements OnInit {
       this.loadCartItems();
     } else {
       alert('You have no reserved screenings to checkout.');
+    }
+  }
+
+
+  submitRatingAndRemove(item: any, rating: number): void {
+    // First, update the user's rating in their cart
+    if (CartService.rateMovie(item.id, rating)) {
+      // Then, get the current user
+      const user = UserService.getActiveUser();
+      if (!user || !user.id) return; // Check explicitly for user.id
+      
+      // Save the rating to persistent storage BEFORE removing from cart
+      CartService.saveRatingHistory(user.id, item.movieId, rating);
+      
+      // Update the movie's overall rating
+      const movieId = item.movieId;
+      this.updateMovieRating(movieId);
+      
+      // Show confirmation message
+      alert('Thank you for rating this movie!');
+      
+      // Finally, remove the item from cart
+      CartService.removeFromCart(item.id);
+      this.loadCartItems();
     }
   }
 }

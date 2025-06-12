@@ -83,5 +83,14 @@ export class UserService {
         return users.find(user => user.id === id) || null;
     }
 
+    static getAllUsers(): UserModel[] {
+        return this.getUsers();
+    }
+
+     static logout() {
+        localStorage.removeItem('active');
+        return true;
+    }
+
 
 }

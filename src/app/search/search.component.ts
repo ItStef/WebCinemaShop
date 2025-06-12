@@ -13,16 +13,24 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OnInit } from '@angular/core';
+import { UserService } from '../../services/user.service';
+import { Router } from '@angular/router';
+import { R } from '@angular/cdk/keycodes';
+import { MatMenu } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-movie',
   standalone: true,
   imports: [
-    MatTableModule, MatButtonModule, CommonModule, RouterLink, MatFormFieldModule, MatInputModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatIconModule, MatExpansionModule, FormsModule, ReactiveFormsModule],
+    MatTableModule, MatButtonModule, CommonModule, RouterLink, MatFormFieldModule, MatInputModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatIconModule, MatExpansionModule, FormsModule, ReactiveFormsModule, MatMenuModule
+  ],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
 })
-export class SearchComponent {
+export class SearchComponent implements OnInit {
+  currentUser: any;
   displayedColumns: string[] = ['id', 'title', 'director', 'releaseDate', 'genre', 'actions'];
   allMovies: MovieModel[] = MovieService.getMovies();
   dataSource: MovieModel[] = this.allMovies;
@@ -42,6 +50,29 @@ export class SearchComponent {
   minRatingFilter: number | null = null;
 
   genreList: string[] = MovieService.getGenres();
+// Add constructor
+  constructor(private router: Router) {}
+  
+  // Add ngOnInit
+  ngOnInit() {
+    this.currentUser = UserService.getActiveUser();
+  }
+  
+  // Add these methods
+  getUserInitials(): string {
+    if (!this.currentUser) return '';
+    
+    const firstName = this.currentUser.firstName || '';
+    const lastName = this.currentUser.lastName || '';
+    
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+  }
+
+  logout(): void {
+    UserService.logout();
+    this.router.navigate(['/login']);
+  }
+  
   
   applyQuickFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
@@ -137,11 +168,13 @@ export class SearchComponent {
     }
   
 
-    if (this.minRatingFilter !== null) {
-      filteredMovies = filteredMovies.filter(movie => 
-        movie.averageRating >= this.minRatingFilter!);
-    }
-    
+  if (this.minRatingFilter !== null) {
+    filteredMovies = filteredMovies.filter(movie => 
+      movie.averageRating !== undefined && 
+      movie.averageRating !== null && 
+      movie.averageRating >= this.minRatingFilter!);
+  }
+      
     this.dataSource = filteredMovies;
   }
  

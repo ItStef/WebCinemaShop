@@ -95,7 +95,7 @@ export class CartService {
     const item = user.cart.find(item => item.id === cartItemId);
     if (!item || item.status !== 'watched') return false;
     
-    item.rating = Math.min(Math.max(1, rating), 5); // Ensure rating is between 1-5
+    item.rating = Math.min(Math.max(1, rating), 10); // Ensure rating is between 1-10
     
     // Update user in storage
     UserService.updateUser(user);
@@ -131,5 +131,24 @@ export class CartService {
     return cartItems
       .filter(item => item.status === 'reserved' || item.status === 'watched')
       .reduce((total, item) => total + item.total, 0);
+  }
+
+    // Add this method to CartService
+  static saveRatingHistory(userId: string, movieId: string, rating: number): void {
+    // Get existing ratings history
+    const ratingsJson = localStorage.getItem('movieRatingsHistory') || '[]';
+    const ratings = JSON.parse(ratingsJson);
+    
+    // Always add a new rating (instead of updating existing ones)
+    ratings.push({
+      id: Math.random().toString(36).substring(2, 15), // Add unique ID for each rating
+      userId,
+      movieId,
+      rating,
+      date: new Date().toISOString()
+    });
+    
+    // Save back to localStorage
+    localStorage.setItem('movieRatingsHistory', JSON.stringify(ratings));
   }
 }

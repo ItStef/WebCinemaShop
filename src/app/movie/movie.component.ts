@@ -11,7 +11,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { UserService } from '../../services/user.service';
 import { CartService } from '../../services/cart.service';
-import { MatDivider } from '@angular/material/divider';
+import { MatMenu } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
+
 
 @Component({
   selector: 'app-movie',
@@ -25,12 +27,15 @@ import { MatDivider } from '@angular/material/divider';
     MatIconModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatMenu,
+    MatMenuModule
     
   ],
   templateUrl: './movie.component.html',
   styleUrl: './movie.component.css'
 })
 export class MovieComponent implements OnInit {
+  currentUser: any = null;
   movie: MovieModel | null = null;
   selectedScreening: any = null;
   quantity: number = 1;
@@ -41,7 +46,9 @@ export class MovieComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+     this.currentUser = UserService.getActiveUser();
     this.route.paramMap.subscribe(params => {
+      
       const movieId = params.get('id');
       if (movieId) {
         this.movie = MovieService.getMovieById(movieId);
@@ -101,8 +108,19 @@ export class MovieComponent implements OnInit {
       alert('Failed to add item to cart. Please try again.');
     }
   }
-  isLastReview(review: any): boolean {
-  if (!this.movie || !this.movie.reviews) return true;
-  return this.movie.reviews[this.movie.reviews.length - 1] === review;
+  // Add these methods
+  getUserInitials(): string {
+    if (!this.currentUser) return '';
+    
+    const firstName = this.currentUser.firstName || '';
+    const lastName = this.currentUser.lastName || '';
+    
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+  }
+
+  logout(): void {
+    UserService.logout();
+    this.router.navigate(['/login']);
 }
+
 }

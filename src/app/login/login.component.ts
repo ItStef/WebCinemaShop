@@ -14,15 +14,12 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-
-
   public username: string = ''
   public password: string = ''
 
   constructor(private router: Router) {
     if (UserService.getActiveUser()) {
       router.navigate(['/'])
-      return
     }
   }
 
@@ -33,9 +30,6 @@ export class LoginComponent {
     }
     if (UserService.login(this.username, this.password)) {
       this.router.navigate(['/'])
-      return
     }
   }
-
-
 }

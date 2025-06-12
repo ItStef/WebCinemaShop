@@ -1,0 +1,151 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #121212;
+  background-image: url('../../assets/website-images/login.avif');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background-color: rgba(18, 18, 18, 0.9);
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  color: white;
+  animation: cardAppear 0.6s ease-out;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+mat-card-header h1 {
+  margin: 0;
+  color: white;
+  font-size: 2rem;
+  font-weight: 500;
+  animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 1rem;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
+}
+
+button[mat-button], a[mat-button] {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  color: white;
+}
+
+button[mat-button] {
+  background-color: #0d47a1;
+  box-shadow: 0 2px 8px rgba(13, 71, 161, 0.3);
+}
+
+a[mat-button] {
+  color: #64b5f6;
+}
+
+button[mat-button]:hover, a[mat-button]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+button[mat-button]:hover {
+  background-color: #1565c0;
+}
+
+a[mat-button]:hover {
+  background-color: rgba(100, 181, 246, 0.1);
+}
+
+button[mat-button]:active, a[mat-button]:active {
+  transform: translateY(1px);
+}
+
+::ng-deep .mat-mdc-form-field-label {
+  color: #bdbdbd !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-form-field-focus-overlay {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-input-element {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px;
+}
+
+::ng-deep .mat-mdc-form-field input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+::ng-deep .mat-focused .mat-mdc-input-element {
+  text-shadow: 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+::ng-deep .mdc-line-ripple::after {
+  border-bottom-color: #42a5f5 !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mdc-line-ripple::after {
+  animation: rippleExpand 0.3s ease-out;
+}
+
+@keyframes rippleExpand {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}

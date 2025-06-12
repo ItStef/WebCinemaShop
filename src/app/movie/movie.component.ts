@@ -14,7 +14,6 @@ import { CartService } from '../../services/cart.service';
 import { MatMenu } from '@angular/material/menu';
 import { MatMenuModule } from '@angular/material/menu';
 
-
 @Component({
   selector: 'app-movie',
   standalone: true,
@@ -29,7 +28,6 @@ import { MatMenuModule } from '@angular/material/menu';
     MatSelectModule,
     MatMenu,
     MatMenuModule
-    
   ],
   templateUrl: './movie.component.html',
   styleUrl: './movie.component.css'
@@ -46,9 +44,8 @@ export class MovieComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-     this.currentUser = UserService.getActiveUser();
+    this.currentUser = UserService.getActiveUser();
     this.route.paramMap.subscribe(params => {
-      
       const movieId = params.get('id');
       if (movieId) {
         this.movie = MovieService.getMovieById(movieId);
@@ -60,7 +57,6 @@ export class MovieComponent implements OnInit {
     this.router.navigate(['/search']);
   }
   
-  // Quantity control methods
   decreaseQuantity(): void {
     if (this.quantity > 1) {
       this.quantity--;
@@ -71,9 +67,7 @@ export class MovieComponent implements OnInit {
     this.quantity++;
   }
   
-  // Add to cart method
   addToCart(): void {
-    // Check if user is logged in
     if (!UserService.getActiveUser()) {
       const goToLogin = confirm('You need to be logged in to add items to cart. Go to login page?');
       if (goToLogin) {
@@ -82,13 +76,11 @@ export class MovieComponent implements OnInit {
       return;
     }
     
-    // Validate selection
     if (!this.selectedScreening) {
       alert('Please select a screening time');
       return;
     }
     
-    // Add to cart using CartService
     const success = CartService.addToCart(
       this.movie!.id,
       this.selectedScreening.id,
@@ -100,7 +92,6 @@ export class MovieComponent implements OnInit {
       if (viewCart) {
         this.router.navigate(['/cart']);
       } else {
-        // Reset selection for another potential reservation
         this.selectedScreening = null;
         this.quantity = 1;
       }
@@ -108,7 +99,7 @@ export class MovieComponent implements OnInit {
       alert('Failed to add item to cart. Please try again.');
     }
   }
-  // Add these methods
+
   getUserInitials(): string {
     if (!this.currentUser) return '';
     
@@ -121,6 +112,5 @@ export class MovieComponent implements OnInit {
   logout(): void {
     UserService.logout();
     this.router.navigate(['/login']);
-}
-
+  }
 }

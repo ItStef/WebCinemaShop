@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { UserService } from '../../services/user.service';
 import { UserModel } from '../../models/user.model';
+import { MovieService } from '../../services/movie.service';
 
 @Component({
   selector: 'app-home',
@@ -23,11 +24,21 @@ import { UserModel } from '../../models/user.model';
 export class HomeComponent implements OnInit {
   isLoggedIn: boolean = false;
   currentUser: UserModel | null = null;
+  featuredMovies: any[] = [];
 
   constructor(private router: Router) {}
 
   ngOnInit() {
     this.checkLoginStatus();
+    this.initializeMovies();
+  }
+
+  initializeMovies() {
+    this.featuredMovies = [
+      { title: 'Inception', description: MovieService.getMovieDescription('Inception') },
+      { title: 'The Dark Knight', description: MovieService.getMovieDescription('The Dark Knight') },
+      { title: 'Interstellar', description: MovieService.getMovieDescription('Interstellar') },
+    ];
   }
 
   checkLoginStatus() {

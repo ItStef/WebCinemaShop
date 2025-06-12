@@ -1,7 +1,6 @@
 <div class="movie-details-container" *ngIf="movie">
-  <!-- Add User Profile Box -->
   <div class="user-profile-container">
-    <div class="user-profile-box" [matMenuTriggerFor]="userMenu">
+    <div class="user-profile-box" [matMenuTriggerFor]="userMenu" #menuTrigger="matMenuTrigger">
       <div class="avatar">{{ getUserInitials() }}</div>
       <div class="user-info">
         <span class="username">{{ currentUser?.firstName }} {{ currentUser?.lastName }}</span>
@@ -9,16 +8,17 @@
       </div>
     </div>
     
-    <!-- User menu (appears on click) -->
-    <mat-menu #userMenu="matMenu">
-      <button mat-menu-item routerLink="/cart">
-        <mat-icon>shopping_cart</mat-icon>
-        <span>My Cart</span>
-      </button>
-      <button mat-menu-item (click)="logout()">
-        <mat-icon>exit_to_app</mat-icon>
-        <span>Logout</span>
-      </button>
+    <mat-menu #userMenu="matMenu" class="user-menu" [overlapTrigger]="false">
+      <div class="menu-items-container">
+        <button mat-menu-item routerLink="/cart" class="full-width-menu-item">
+          <mat-icon>shopping_cart</mat-icon>
+          <span>My Cart</span>
+        </button>
+        <button mat-menu-item (click)="logout()" class="full-width-menu-item">
+          <mat-icon>exit_to_app</mat-icon>
+          <span>Logout</span>
+        </button>
+      </div>
     </mat-menu>
   </div>
   
@@ -37,7 +37,6 @@
       <p><strong>Cast:</strong> {{movie.cast.join(', ')}}</p>
       <p *ngIf="movie.averageRating"><strong>Average Rating:</strong> {{movie.averageRating | number:'1.1-1'}} / 10</p>
 
-            <!-- Screenings and Reservation Section -->
       <div class="reservation-section" *ngIf="movie.screenings && movie.screenings.length > 0">
         <h3>Available Screenings</h3>
         

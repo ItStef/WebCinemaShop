@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { MovieModel } from '../../models/movie.model';
 import { MovieService } from '../../services/movie.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,18 +13,16 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
-import { R } from '@angular/cdk/keycodes';
-import { MatMenu } from '@angular/material/menu';
 import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-movie',
   standalone: true,
   imports: [
-    MatTableModule, MatButtonModule, CommonModule, RouterLink, MatFormFieldModule, MatInputModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, MatIconModule, MatExpansionModule, FormsModule, ReactiveFormsModule, MatMenuModule
+    MatTableModule, MatButtonModule, CommonModule, RouterLink, MatFormFieldModule, 
+    MatInputModule, MatSelectModule, MatDatepickerModule, MatNativeDateModule, 
+    MatIconModule, MatExpansionModule, FormsModule, ReactiveFormsModule, MatMenuModule
   ],
   templateUrl: './search.component.html',
   styleUrl: './search.component.css'
@@ -35,7 +33,6 @@ export class SearchComponent implements OnInit {
   allMovies: MovieModel[] = MovieService.getMovies();
   dataSource: MovieModel[] = this.allMovies;
   
-  // Filter properties
   titleFilter: string = '';
   descriptionFilter: string = '';
   genreFilter: string[] = [];
@@ -48,17 +45,14 @@ export class SearchComponent implements OnInit {
   minPriceFilter: number | null = null;
   maxPriceFilter: number | null = null;
   minRatingFilter: number | null = null;
-
   genreList: string[] = MovieService.getGenres();
-// Add constructor
+
   constructor(private router: Router) {}
   
-  // Add ngOnInit
   ngOnInit() {
     this.currentUser = UserService.getActiveUser();
   }
   
-  // Add these methods
   getUserInitials(): string {
     if (!this.currentUser) return '';
     
@@ -72,7 +66,6 @@ export class SearchComponent implements OnInit {
     UserService.logout();
     this.router.navigate(['/login']);
   }
-  
   
   applyQuickFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.toLowerCase();
@@ -89,17 +82,14 @@ export class SearchComponent implements OnInit {
     );
   }
 
-
   applyDetailedFilters() {
     let filteredMovies = this.allMovies;
     
-
     if (this.titleFilter) {
       filteredMovies = filteredMovies.filter(movie => 
         movie.title.toLowerCase().includes(this.titleFilter.toLowerCase()));
     }
     
-
     if (this.descriptionFilter) {
       filteredMovies = filteredMovies.filter(movie => 
         movie.description.toLowerCase().includes(this.descriptionFilter.toLowerCase()));
@@ -107,7 +97,6 @@ export class SearchComponent implements OnInit {
 
     if (this.genreFilter && this.genreFilter.length > 0) {
       filteredMovies = filteredMovies.filter(movie => 
-        // Check if ALL of the selected genres match any of the movie's genres
         this.genreFilter.every(selectedGenre => 
           movie.genre.some(movieGenre => 
             movieGenre.toLowerCase() === selectedGenre.toLowerCase()
@@ -115,23 +104,21 @@ export class SearchComponent implements OnInit {
         )
       );
     }
-        
-
+    
     if (this.directorFilter) {
       filteredMovies = filteredMovies.filter(movie => 
         movie.director.toLowerCase().includes(this.directorFilter.toLowerCase()));
     }
     
-
     if (this.actorFilter) {
       filteredMovies = filteredMovies.filter(movie => 
         movie.cast.some(actor => actor.toLowerCase().includes(this.actorFilter.toLowerCase())));
     }
     
-
     if (this.minDurationFilter !== null) {
       filteredMovies = filteredMovies.filter(movie => movie.duration >= this.minDurationFilter!);
     }
+    
     if (this.maxDurationFilter !== null) {
       filteredMovies = filteredMovies.filter(movie => movie.duration <= this.maxDurationFilter!);
     }
@@ -146,7 +133,6 @@ export class SearchComponent implements OnInit {
       });
     }
     
-
     if (this.screeningDateFilter) {
       const filterDate = new Date(this.screeningDateFilter);
       filteredMovies = filteredMovies.filter(movie => 
@@ -158,27 +144,25 @@ export class SearchComponent implements OnInit {
         })
       );
     }
-
     
     if (this.minPriceFilter !== null) {
       filteredMovies = filteredMovies.filter(movie => movie.price >= this.minPriceFilter!);
     }
+    
     if (this.maxPriceFilter !== null) {
       filteredMovies = filteredMovies.filter(movie => movie.price <= this.maxPriceFilter!);
     }
   
-
-  if (this.minRatingFilter !== null) {
-    filteredMovies = filteredMovies.filter(movie => 
-      movie.averageRating !== undefined && 
-      movie.averageRating !== null && 
-      movie.averageRating >= this.minRatingFilter!);
-  }
+    if (this.minRatingFilter !== null) {
+      filteredMovies = filteredMovies.filter(movie => 
+        movie.averageRating !== undefined && 
+        movie.averageRating !== null && 
+        movie.averageRating >= this.minRatingFilter!);
+    }
       
     this.dataSource = filteredMovies;
   }
  
-
   resetFilters() {
     this.titleFilter = '';
     this.descriptionFilter = '';

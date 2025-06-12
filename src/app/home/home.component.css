@@ -1,134 +1,297 @@
-.home-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #121212;
+  color: white;
+  background-image: url('../../assets/website-images/homeBG.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
 }
 
-.welcome-section {
-  margin-bottom: 40px;
-  text-align: center;
-  padding: 40px 20px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-}
-
-.welcome-message h1 {
-  font-size: 2rem;
-  margin-bottom: 16px;
-  color: #333;
-}
-
-.welcome-message p {
-  font-size: 1.1rem;
-  color: #666;
-  margin-bottom: 24px;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 24px;
-}
-
-/* User profile box styling */
-.user-profile-container {
-  margin: 24px auto;
-  max-width: 300px;
-}
-
-.user-profile-box {
-  display: flex;
-  align-items: center;
-  padding: 16px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  cursor: pointer;
+.top-nav {
+  background-color: #0d47a1;
+  color: black;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  animation: navFadeIn 0.5s ease-in-out;
   transition: all 0.3s ease;
 }
 
-.user-profile-box:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+@keyframes navFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.nav-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.nav-logo::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: white;
+  transition: width 0.3s ease;
+}
+
+.nav-logo:hover::after {
+  width: 100%;
+}
+
+.nav-buttons button {
+  margin-left: 0.5rem;
+  color: white;
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.nav-buttons button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  z-index: -1;
+}
+
+.nav-buttons button:hover {
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.nav-buttons button:hover::before {
+  left: 0;
+}
+
+.nav-buttons button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-buttons button mat-icon {
+  transition: transform 0.3s ease;
+}
+
+.nav-buttons button:hover mat-icon {
   transform: translateY(-2px);
 }
 
-.avatar {
-  width: 48px;
-  height: 48px;
+.nav-user-profile {
+  display: flex;
+  align-items: center;
+}
+
+.nav-user-profile .user-profile-box {
+  display: flex;
+  align-items: center;
+  background-color: rgba(30, 30, 30, 0.8);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(3px);
+}
+
+.nav-user-profile .user-profile-box:hover {
+  background-color: rgba(40, 40, 40, 0.85);
+  transform: translateY(-2px);
+}
+
+.nav-user-profile .avatar {
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background-color: #3f51b5;
+  background-color: #1976d2;
   color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
   font-weight: bold;
-  margin-right: 16px;
+  margin-right: 12px;
 }
 
-.user-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.username {
+.nav-user-profile .username {
+  color: white;
   font-weight: 500;
-  font-size: 1.1rem;
 }
 
-.hover-hint {
-  font-size: 0.8rem;
-  color: #999;
-  margin-top: 4px;
+.nav-user-profile .hover-hint {
+  font-size: 0.7rem;
+  color: #bdbdbd;
 }
 
-/* Featured section styling */
-.featured-section {
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.welcome-section {
   text-align: center;
-  margin-top: 40px;
+  margin: 3rem 0;
+}
+
+.welcome-message h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.welcome-message p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #e0e0e0;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.action-buttons button[mat-raised-button] {
+  background-color: rgba(30, 30, 30, 0.8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease;
+}
+
+.action-buttons button[mat-raised-button]:hover {
+  background-color: rgba(40, 40, 40, 0.85) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+.action-buttons button[mat-raised-button]:active {
+  transform: translateY(1px);
+}
+
+::ng-deep .action-buttons .mat-mdc-raised-button.mat-primary {
+  background-color: rgba(30, 30, 30, 0.8) !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .action-buttons .mat-mdc-raised-button.mat-primary:hover {
+  background-color: rgba(40, 40, 40, 0.85) !important;
+}
+
+.action-buttons button[mat-raised-button] mat-icon {
+  color: #ffffff !important;
+}
+
+.featured-section {
+  padding: 2rem 0;
 }
 
 .featured-section h2 {
-  font-size: 1.8rem;
-  margin-bottom: 24px;
-  color: #333;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  color: white;
 }
 
 .featured-movies {
   display: flex;
-  gap: 24px;
+  gap: 2rem;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 24px;
 }
 
 .movie-card {
-  width: 220px;
+  background-color: #1e1e1e;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+  width: 280px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  margin-bottom: 2rem;
 }
 
 .movie-card:hover {
   transform: translateY(-5px);
-}
-
-.movie-card img {
-  width: 100%;
-  height: 330px;
-  object-fit: cover;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
 }
 
 .movie-card h3 {
+  padding: 1rem 1rem 0.5rem;
   font-size: 1.2rem;
-  padding: 12px 16px 4px;
-  margin: 0;
+  color: white;
 }
 
 .movie-card p {
+  padding: 0 1rem 1rem;
+  color: #bdbdbd;
   font-size: 0.9rem;
-  padding: 0 16px 16px;
-  color: #666;
+}
+
+button[mat-raised-button] {
+  padding: 0.5rem 1.5rem;
+}
+
+button[mat-stroked-button] {
+  padding: 0.5rem 1.5rem;
+  border-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+button[mat-stroked-button]:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+::ng-deep .mat-mdc-menu-panel {
+  background-color: #1e1e1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+::ng-deep .mat-mdc-menu-item {
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-menu-item .mat-icon {
+  color: #64b5f6 !important;
+}
+
+::ng-deep .mat-mdc-menu-item:hover {
+  background-color: rgba(30, 30, 30, 0.8) !important;
 }

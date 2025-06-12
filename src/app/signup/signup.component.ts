@@ -31,16 +31,17 @@ export class SignupComponent {
   };
 
   confirmPassword: string = '';
+  genreList: string[] = MovieService.getGenres();
+
   constructor(private router: Router) {
     if (UserService.getActiveUser()) {
       this.router.navigate(['/']);
     }
   }
-  genreList: string[] = MovieService.getGenres();
 
   doSignup() {
-    // Basic validation
-    if (!this.user.username || !this.user.password|| !this.confirmPassword || !this.user.email || !this.user.address || !this.user.firstName || !this.user.lastName || !this.user.phone) {
+    if (!this.user.username || !this.user.password|| !this.confirmPassword || !this.user.email || 
+        !this.user.address || !this.user.firstName || !this.user.lastName || !this.user.phone) {
       alert('All fields are required');
       return;
     }
@@ -61,8 +62,7 @@ export class SignupComponent {
     }
 
     this.user.id = Math.random().toString(36).substring(2, 15);
-
-    const result = UserService.createUser(this.user);
+    UserService.createUser(this.user);
     UserService.login(this.user.username, this.user.password);
     alert('Account created successfully!');
     this.router.navigate(['/']);

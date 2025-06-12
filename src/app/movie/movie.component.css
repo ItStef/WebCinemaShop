@@ -1,27 +1,130 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #121212;
+  color: white;
+  background-image: url('../../assets/website-images/movie.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
 .movie-details-container {
   display: flex;
   justify-content: center;
   padding: 20px;
+  position: relative;
 }
 
 .movie-card {
   max-width: 600px;
   width: 100%;
+  background-color: rgba(18, 18, 18, 0.9);
+  color: white;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  animation: cardAppear 0.6s ease-out;
+}
+
+@keyframes cardAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+::ng-deep .mat-mdc-card-title {
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-card-subtitle {
+  color: #bdbdbd !important;
 }
 
 mat-card-content {
   margin-top: 16px;
 }
 
+mat-card-content p {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+mat-card-content strong {
+  color: #64b5f6;
+  font-weight: 500;
+}
+
 .error-message {
   text-align: center;
   padding: 20px;
+  color: white;
 }
 
 button {
   margin: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
 }
-/* User profile styles */
+
+mat-card-actions button, 
+button[mat-raised-button][color="primary"] {
+  background-color: rgba(30, 30, 30, 0.8) !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(3px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+mat-card-actions button:hover, 
+button[mat-raised-button][color="primary"]:hover {
+  background-color: rgba(40, 40, 40, 0.85) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+mat-card-actions button:active, 
+button[mat-raised-button][color="primary"]:active {
+  transform: translateY(1px);
+}
+
+button[mat-icon-button] {
+  color: white !important;
+  background-color: rgba(30, 30, 30, 0.8) !important;
+}
+
+button[mat-icon-button]:hover {
+  background-color: rgba(40, 40, 40, 0.85) !important;
+}
+
+::ng-deep .mat-mdc-button.mat-primary,
+::ng-deep .mat-mdc-raised-button.mat-primary,
+::ng-deep .mat-mdc-unelevated-button.mat-primary,
+::ng-deep .mat-mdc-outlined-button.mat-primary {
+  background-color: rgba(30, 30, 30, 0.8) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-button.mat-primary:hover,
+::ng-deep .mat-mdc-raised-button.mat-primary:hover,
+::ng-deep .mat-mdc-unelevated-button.mat-primary:hover,
+::ng-deep .mat-mdc-outlined-button.mat-primary:hover {
+  background-color: rgba(40, 40, 40, 0.85) !important;
+}
+
+::ng-deep button[mat-raised-button] .mat-icon {
+  color: white !important;
+}
+
 .user-profile-container {
   position: absolute;
   top: 20px;
@@ -32,23 +135,27 @@ button {
 .user-profile-box {
   display: flex;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(30, 30, 30, 0.8);
   border-radius: 8px;
   padding: 8px 12px;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(3px);
 }
 
 .user-profile-box:hover {
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background-color: rgba(40, 40, 40, 0.85);
+  transform: translateY(-2px);
 }
 
 .avatar {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background-color: #3f51b5;
+  background-color: #1976d2;
   color: white;
   display: flex;
   align-items: center;
@@ -64,9 +171,132 @@ button {
 
 .username {
   font-weight: 500;
+  color: white;
 }
 
 .hover-hint {
   font-size: 0.8rem;
-  color: #666;
+  color: #bdbdbd;
+}
+
+::ng-deep .mat-mdc-menu-panel.mat-mdc-menu-panel {
+  min-width: 0 !important;
+  width: var(--menu-trigger-width) !important;
+}
+
+::ng-deep .full-width-menu-item {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+::ng-deep .mat-mdc-menu-panel {
+  background-color: #1e1e1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px !important;
+  margin-top: 8px !important;
+  overflow-x: hidden !important;
+}
+
+::ng-deep .mat-mdc-menu-item {
+  color: white !important;
+  width: 100% !important;
+}
+
+::ng-deep .mat-mdc-menu-item .mat-icon {
+  color: #64b5f6 !important;
+  margin-right: 8px !important;
+}
+
+::ng-deep .mat-mdc-menu-item:hover {
+  background-color: rgba(30, 30, 30, 0.8) !important;
+}
+
+.reservation-section {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.reservation-section h3 {
+  color: white;
+  margin-bottom: 16px;
+}
+
+.quantity-selector {
+  display: flex;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.quantity-value {
+  margin: 0 16px;
+  font-size: 18px;
+  min-width: 24px;
+  text-align: center;
+}
+
+.price-calculation {
+  margin-bottom: 16px;
+}
+
+.total-price {
+  font-weight: bold;
+  font-size: 18px;
+  color: #64b5f6;
+}
+
+.full-width {
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-form-field-label {
+  color: #bdbdbd !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-form-field-focus-overlay {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-select-value-text {
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-select-arrow {
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-input-element {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.3px;
+}
+
+::ng-deep .mat-mdc-select-panel {
+  background-color: #1e1e1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5) !important;
+}
+
+::ng-deep .mat-mdc-option {
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-option:hover:not(.mdc-list-item--disabled) {
+  background-color: rgba(25, 118, 210, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-option.mat-mdc-option-active,
+::ng-deep .mat-mdc-option.mdc-list-item--selected {
+  background-color: rgba(25, 118, 210, 0.2) !important;
+  color: #64b5f6 !important;
+}
+
+button[mat-raised-button][disabled] {
+  background-color: rgba(30, 30, 30, 0.4) !important;
+  color: rgba(255, 255, 255, 0.3) !important;
 }
